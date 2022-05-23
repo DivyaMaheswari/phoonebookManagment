@@ -1,0 +1,506 @@
+phonebook management system code
+
+#include <bits/stdc++.h>
+using namespace std;
+class node
+{
+public:
+  char name[30];
+  char phoneno[50];
+  char mail[60];
+  node *next, *prev;
+    node (char n[], char p[], char g[])
+  {
+    strcpy (name, n);
+    strcpy (phoneno, p);
+    strcpy (mail, g);
+    next = NULL;
+    prev = NULL;
+  }
+  friend class list;
+};
+
+
+class plist
+{
+  node *head, *temp, *ptr;
+  node *ptr1, *ptr2, *dup;
+
+public:
+    node * prevn;
+
+  void insert ()
+  {
+    accept ();
+  }
+
+  void sort ();
+  void deleteno (char ch[20]);
+  void del_same_name ();
+  void del_same_no ();
+  void del_same_mail ();
+  void search_by_name (char p[20]);
+  void search_by_no (char no[30]);
+  void search_by_mail (char g[20]);
+  void accept ();
+  void update (char nam[20]);
+  void display ();
+  plist ()
+  {
+    head = NULL;
+    temp = NULL;
+    ptr = NULL;
+    ptr1 = NULL;
+    ptr2 = NULL;
+    dup = NULL;
+  }
+};
+
+
+void plist::accept()
+{
+  char name[40];
+  char phoneno[40];
+  char mail[50];
+  char ans;
+  do
+    {
+      cout << "Enter name : "<<endl;
+      cin >> name;
+      cout << "Enter number : "<<endl;
+      cin >> phoneno;
+
+      while (strlen (phoneno) != 10)
+	{
+	  cout << "Enter valid number . "<<endl;
+	  cin >> phoneno;
+	}
+
+      cout << "Enter gmail : "<<endl;
+      cin >> mail;
+
+      temp = new node (name, phoneno, mail);
+      if (head == NULL)
+	{
+	  head = temp;
+	}
+      else
+	{
+	  ptr = head;
+	  while (ptr->next != NULL)
+	    {
+	      ptr = ptr->next;
+	    }
+	  ptr->next = temp;
+	  temp->prev = ptr;
+	}
+      cout << "\nDo you want to continue ? \nenter y for yes and n for no. "<<endl;
+      cin >> ans;
+    }
+  while (ans == 'y' || ans == 'Y');
+}
+
+void plist::display()
+{
+  ptr = head;
+  while (ptr != NULL)
+    {
+      cout << "\n Name : " << ptr->name;
+      cout << "\n Number : " << ptr->phoneno;
+      cout << "\n Gmail : " << ptr->mail;
+      ptr = ptr->next;
+    }
+}
+
+
+
+void plist::sort()
+{
+  node *i, *j;
+  int temp;
+  char n[10];
+  for (i = head; i->next != NULL; i = i->next)
+    {
+      for (j = i->next; j != NULL; j = j->next)
+	{
+	  temp = strcmp (i->name, j->name);
+	  if (temp > 0)
+	    {
+	      strcpy (n, i->name);
+	      strcpy (i->name, j->name);
+	      strcpy (j->name, n);
+	    }
+	}
+    }
+}
+
+
+void plist::deleteno(char s[20])
+{
+  int c = 0;
+  ptr = head;
+  while (ptr != NULL)
+    {
+      if (strcmp (s, ptr->name) == 0)
+	{
+	  c == 1;
+	  break;
+	}
+      else
+	{
+	  c == 2;
+
+	}
+      ptr = ptr->next;
+    }
+
+  if (c == 1 && ptr != head && ptr->next != NULL)
+    {
+      ptr->prev->next = ptr->next;
+      ptr->next->prev = ptr->prev;
+      free (ptr);
+      cout << "Deleted Succesfully" << endl;
+
+    }
+  if (ptr == head)
+    {
+      head = head->next;
+      head->prev = NULL;
+      free (ptr);
+      cout << "Deleted Succesfully" << endl;
+    }
+
+  if (ptr->next = NULL)
+    {
+      ptr->prev->next = NULL;
+      ptr->prev = NULL;
+      free (ptr);
+      cout << "Deleted Succesfully" << endl;
+    }
+
+  if (c == 2)
+    {
+      cout << "Contact not found." << endl;
+    }
+}
+
+void plist::del_same_name()
+{
+  ptr1 = head;
+  while (ptr1 != NULL && ptr->next != NULL)
+    {
+      ptr2 = ptr1;
+      while (ptr2->next != NULL)
+	{
+	  if (strcmp (ptr1->name, ptr2->next->name) == 0)
+	    {
+	      dup = ptr2->next;
+	      ptr2->next = ptr2->next->next;
+	      free (dup);
+	    }
+	  else
+	    {
+	      ptr2 = ptr2->next;
+	    }
+	}
+      ptr1 = ptr1->next;
+    }
+}
+
+void plist::del_same_mail()
+{
+  ptr1 = head;
+  while (ptr1 != NULL && ptr1->next != NULL)
+    {
+      ptr2 = ptr1;
+      while (ptr2->next != NULL)
+	{
+	  if (strcmp (ptr1->mail, ptr2->next->mail) == 0)
+	    {
+	      dup = ptr2->next;
+	      ptr2->next = ptr2->next->next;
+	      free (dup);
+	    }
+	  else
+	    {
+	      ptr2 = ptr2->next;
+	    }
+	}
+      ptr1 = ptr1->next;
+    }
+}
+
+
+void plist::del_same_no()
+{
+  ptr1 = head;
+  while (ptr1 != NULL && ptr1->next != NULL)
+    {
+      ptr2 = ptr1;
+      while (ptr2->next != NULL)
+	{
+	  if (strcmp (ptr1->phoneno, ptr2->next->phoneno) == 0)
+	    {
+	      dup = ptr2->next;
+	      ptr2->next = ptr2->next->next;
+	      free (dup);
+	    }
+	  else
+	    {
+	      ptr2 = ptr2->next;
+	    }
+	}
+      ptr1 = ptr1->next;
+    }
+}
+
+void plist::search_by_name(char na[10])
+{
+  ptr = head;
+  while (ptr != NULL)
+    {
+      if (strcmp (na, ptr->name) == 0)
+	{
+	  cout << "Name Found" << endl;
+	  cout << "Name : " << ptr->name << endl;
+	  cout << "Number : " << ptr->phoneno << endl;
+	  cout << "Gmail : " << ptr->mail << endl;
+	}
+      else
+	{
+	  cout << "Name not found" << endl;
+	}
+      ptr = ptr->next;
+    }
+}
+
+void plist::search_by_no (char no[20])
+{
+  ptr = head;
+  while (ptr != NULL)
+    {
+      if (strcmp (no, ptr->phoneno) == 0)
+	{
+	  cout << "Number Found" << endl;
+	  cout << "Name : " << ptr->name << endl;
+	  cout << "Number : " << ptr->phoneno << endl;
+	  cout << "Gmail : " << ptr->mail << endl;
+	}
+      else
+	{
+	  cout << "Number not found" << endl;
+	}
+      ptr = ptr->next;
+    }
+}
+
+
+void plist::search_by_mail(char gm[20])
+{
+  ptr = head;
+  while (ptr != NULL)
+    {
+      if (strcmp (gm, ptr->mail) == 0)
+	{
+	  cout << "Gmail Found" << endl;
+	  cout << "Name : " << ptr->name << endl;
+	  cout << "Number : " << ptr->phoneno << endl;
+	  cout << "Gmail : " << ptr->mail << endl;
+	}
+      else
+	{
+	  cout << "Gmail not found" << endl;
+	}
+      ptr = ptr->next;
+    }
+}
+
+
+void plist::update(char n[20])
+{
+  char ans;
+  int c;
+  ptr = head;
+  while (ptr != NULL)
+    {
+      if (strcmp (n, ptr->name) == 0)
+	{
+	  do
+	    {
+	      cout << "What do you want to updte?\n1.Name\n2.Number\n3.Mail";
+	      cin >> c;
+	      switch (c)
+		{
+		case 1:
+		  cout << "Enter new name : " << endl;
+		  cin >> ptr->name;
+		  break;
+
+		case 2:
+		  cout << "Enter new number : " << endl;
+		  cin >> ptr->phoneno;
+		  while (strlen (ptr->phoneno) != 10)
+		    {
+		      cout << "Enter valid number";
+		      cin >> ptr->phoneno;
+		    }
+		  break;
+
+		case 3:
+		  cout << "Enter new gmail : "<<endl;
+		  cin >> ptr->mail;
+		  break;
+		}
+
+	      cout <<"Do you want to update? \ny or Y for yes \n n or N for no "<<endl;
+	      cin >> ans;
+	    }
+	  while (ans == 'y' || ans == 'Y');
+	}
+      ptr = ptr->next;
+    }
+}
+
+
+int main()
+{
+  char n[20];
+  char nam[20];
+  char name[10];
+  char number[10];
+  char gmail[20];
+
+  plist d1;
+  char ans;
+  int ch, a;
+
+  cout <<"**************                                PHONE BOOK                          ********************"<< endl;
+  cout << "Enter your name : " << endl;
+  cin.getline (nam, 20);
+  cout << "\n\n!!!!!!!!!!!!!!!!!!!!!!!   WELCOME " << nam <<"   !!!!!!!!!!!!!!!!!!!!!" << endl;
+
+  cout << "Enter contact details : " << endl;
+  d1.insert ();
+  d1.sort ();
+  do
+    {
+      cout <<"\n\n\n\n1) DISPLAY YOUR PHONE BOOK\n2) INSERT NEW CONTACT\n3) UPDATE DETAILS ON EXISTING CONTACT\n4) DELETE CONTACT\n5) DELETE SAME NAME IN PHONEBOOK\n6) DELETE SAME NUMBERS IN PHONEBOOK\n7) SEARCH\n";
+      cin >> ch;
+      switch (ch)
+	{
+	case 1:
+	  d1.display ();
+	  break;
+	case 2:
+	  d1.insert ();
+	  d1.sort ();
+	  break;
+	case 3:
+	  cout << "Enter name whose details you want to update : " << endl;
+	  cin >> n;
+	  d1.update (n);
+	  d1.sort ();
+	  break;
+	case 4:
+	  cout << "Enter the name whose contact you want to delete : " <<endl;
+	  cin >> name;
+	  d1.deleteno (name);
+	  break;
+	case 5:
+	  d1.del_same_name ();
+	  d1.display ();
+	  break;
+	case 6:
+	  d1.del_same_no ();
+	  d1.display ();
+	  break;
+
+	case 7:
+	  do
+	    {
+	      cout <<
+		"1.SEARCH BY NAME\n2.SEARCH BY NUMBER\n3.SEARCH BY GMAIL"<<endl;
+	      cin >> a;
+	      switch (a)
+		{
+		case 1:
+		  cout << "Enter name to be searched : " << endl;
+		  cin >> name;
+		  d1.search_by_name (name);
+		  break;
+		case 2:
+		  cout << "Enter number to be searched : " << endl;
+		  cin >> number;
+		  d1.search_by_no (number);
+		  break;
+		case 3:
+		  cout << "Enter mail to be searched : " << endl;
+		  cin >> gmail;
+		  d1.search_by_mail (gmail);
+		  break;
+		default:
+		  cout << "\nNO PROPER INPUT GIVEN.....\n";
+		}
+	      cout <<"Do you want to continue seaeching? \n y or Y for yes \n n or N for No"<< endl;
+	      cin >> ans;
+	    }
+	  while (ans == 'y' || ans == 'Y');
+
+	  break;
+	case 8:
+	  d1.del_same_mail ();
+	  d1.display ();
+	  break;
+	default:
+	  cout << "\nNO PROPER INPUT GIVEN..\n";
+	}
+      cout <<"\nDo you want to continue searching? \n y or Y for yes \n n or N for No"<< endl;
+      cin >> ans;
+    }
+  while (ans == 'y' || ans == 'Y');
+
+  return 0;
+}
+
+
+
+output
+
+
+**************                                PHONE BOOK                          ********************
+Enter your name : 
+Divya
+
+
+!!!!!!!!!!!!!!!!!!!!!!!   WELCOME Divya   !!!!!!!!!!!!!!!!!!!!!
+Enter contact details : 
+Enter name : 
+Shubham
+Enter number : 
+8809336272
+Enter gmail : 
+dssa@gmail.com
+
+Do you want to continue ? 
+enter y for yes and n for no. 
+n
+
+
+
+
+1) DISPLAY YOUR PHONE BOOK
+2) INSERT NEW CONTACT
+3) UPDATE DETAILS ON EXISTING CONTACT
+4) DELETE CONTACT
+5) DELETE SAME NAME IN PHONEBOOK
+6) DELETE SAME NUMBERS IN PHONEBOOK
+7) SEARCH
+1
+
+ Name : Shubham
+ Number : 8809336272
+ Gmail : dssa@gmail.com
+Do you want to continue searching? 
+ y or Y for yes 
+ n or N for No
+n
